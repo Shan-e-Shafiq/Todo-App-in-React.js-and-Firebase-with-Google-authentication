@@ -1,0 +1,239 @@
+/* ########### GENERAL CSS */
+
+.flex {
+  display: flex;
+  align-items: center;
+}
+
+
+/* ########### MainContainer */
+
+.MainContainer {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  justify-content: center;
+  z-index: 0;
+  padding: 20px;
+}
+
+.MainContainer img {
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 0;
+}
+
+/* ########### NAVBAR */
+
+.LoginSignup {
+  gap: 10px;
+}
+
+.LoginSignup button {
+  /* background-color: white; */
+  background: linear-gradient(to bottom right, #60c8ff, #7d2dff);
+  color: white;
+  font-weight: 700;
+  border: none;
+}
+
+/* ########### TodoContainer */
+
+.TodoContainer {
+  width: 480px;
+  height: 520px;
+  z-index: 1;
+  border-radius: 10px;
+  flex-direction: column;
+  gap: 25px;
+  overflow: hidden;
+  padding: 20px;
+}
+
+.header {
+  justify-content: space-between;
+  width: 100%;
+}
+
+.header i {
+  font-size: 35px;
+}
+
+.header h1 {
+  letter-spacing: 10px;
+  font-weight: 600;
+}
+
+/* ########### inputContainer */
+
+.inputContainer,
+.TodoItem {
+  width: 100%;
+  padding: 15px;
+  border-radius: 5px;
+  gap: 10px;
+}
+
+.inputContainer {
+  padding: 10px;
+  padding-left: 28px;
+}
+
+.inputContainer input {
+  width: 100%;
+  height: inherit;
+  background-color: transparent;
+  color: white;
+  outline: none;
+  border: none;
+  font-size: 16px;
+}
+
+.inputContainer button {
+  background: linear-gradient(to bottom right, #60c8ff, #7d2dff);
+  color: white;
+  padding-inline: 10px;
+  padding-block: 5px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+}
+
+.inputContainer input::placeholder {
+  color: #91929a;
+}
+
+/* ########### Checkbox_container */
+
+.Checkbox_container {
+  width: 16px;
+  height: 16px;
+  border: 2px solid white;
+  border-radius: 50%;
+  justify-content: center;
+  padding: 10px;
+}
+
+.Checkbox_container_i {
+  color: white;
+  font-size: 12px;
+}
+
+/* ################ TODO CONTAINER  */
+
+.Todo_Container,
+.form_Container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  box-shadow: 0px 0px 17px #25273c2f;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+
+/* ################ TODO ITEMS CONTAINER */
+
+.TodoItemsContainer {
+  width: 100%;
+  height: 320px;
+  border-radius: 10px;
+  padding-bottom: 100px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  z-index: 0;
+  padding-left: 8px;
+}
+
+.TodoItemsContainer::-webkit-scrollbar {
+  width: 8px;
+  background-color: transparent;
+}
+
+.TodoItemsContainer::-webkit-scrollbar-thumb {
+  background-color: #60c8ff;
+  border-radius: 5px;
+}
+
+/* ################ FILTERS CONTAINER */
+
+.filtersContainer {
+  width: 100%;
+  justify-content: space-between;
+  font-size: 14px;
+  padding: 10px;
+  font-weight: 600;
+  background-color: white;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+}
+
+.Filters {
+  gap: 10px;
+}
+
+.Filters div {
+  cursor: pointer;
+}
+
+.hoverDark {
+  color: black;
+}
+
+.hoverLight {
+  color: white;
+}
+
+.active {
+  color: #4f7ef0;
+}
+
+/* ################ LOGINPAGE */
+
+.form_Container {
+  height: auto;
+}
+
+.form_Container input {
+  background-color: transparent;
+  border-color: #60c8ff;
+  color: white;
+}
+
+.form_Container input:focus {
+  outline: 4px solid #60c7ffb0;
+  background-color: transparent;
+  border: 1px solid transparent;
+  color: white;
+}
+
+.form_buttonContainer {
+  flex-direction: column;
+  gap: 15px;
+}
+
+.form_buttonContainer button {
+  width: 100%;
+  padding-block: 5px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(to bottom right, #60c8ff, #7d2dff);
+  color: white;
+}
+
+.FormContainer {
+  width: 480px;
+  /* height: 520px; */
+  z-index: 1;
+  border-radius: 10px;
+  flex-direction: column;
+  gap: 25px;
+  overflow: hidden;
+  padding: 20px;
+}
