@@ -15,13 +15,22 @@ export default function LoginPage() {
   }
   function handleLogin(e) {
     e.preventDefault()
-    console.log('hello')
+    let dataObject = {}
+    const formData = new FormData(e.target)
+    formData.forEach((value, key) => {
+      dataObject[key] = value
+    })
   }
 
   // VARIABLES
   const { isDark, setisDark } = useContext(Context)
   const [showPassword, setshowPassword] = useState(false)
   const showPasswordRef = useRef(null)
+  const InputFieldStyle = {
+    backgroundColor: 'transparent',
+    borderColor: isDark ? '#60c8ff' : '#7d2dff',
+    color: isDark ? 'white' : LightTheme.textColor
+  }
 
   // CODE
 
@@ -57,38 +66,40 @@ export default function LoginPage() {
 
         <form onSubmit={handleLogin} className='form_Container'
           style={{
-            backgroundColor: DarkTheme.TodoContainerColor,
+            backgroundColor: isDark ? DarkTheme.TodoContainerColor : LightTheme.TodoContainerColor,
             padding: '20px',
-            color: DarkTheme.textColor
+            color: isDark ? DarkTheme.textColor : LightTheme.textColor
+
           }}
         >
-          {/* EMAIL */}
+          {/* email address */}
           <div className="mb-3">
-            <label htmlFor="exampleFormControlInput1" className="form-label">Email address</label>
-            <input type="email" className="form-control" id="exampleFormControlInput1" placeholder="name@example.com" required={true} />
+            <label className="form-label">Email address</label>
+            <input style={InputFieldStyle} type='text' className="form-control" name='email' required={true} />
           </div>
-          {/* PASSWORD */}
+          {/* password */}
           <div className="mb-3">
-            <label htmlFor="exampleFormControlInput1" className="form-label">Password</label>
-            <input type={showPassword ? 'text' : 'password'} className="form-control" id="exampleFormControlInput1" placeholder="name@example.com" required={true} />
+            <label className="form-label">Password</label>
+            <input style={InputFieldStyle} type={showPassword ? 'text' : 'password'} className="form-control" name='password' required={true} />
           </div>
-          {/* CHECKBOX */}
+          {/* checkbox */}
           <div className="mb-3 form-check">
-            <input ref={showPasswordRef} onClick={handleShowPassword} type="checkbox" className="form-check-input" id="exampleCheck1" />
-            <label className="form-check-label" htmlFor="exampleCheck1">Show password</label>
+            <input ref={showPasswordRef} onClick={handleShowPassword} type="checkbox" className="form-check-input" />
+            <label className="form-check-label" >Show password</label>
           </div>
-
+          {/* form buttons */}
           <div className="form_buttonContainer flex">
             <button type='submit'>Login</button>
-            {/* <button
+            <button type='submit'
               style={{
                 color: '#60c8ff',
                 background: 'transparent',
                 border: '2px solid #60c8ff'
               }}
-            >Continue with Google</button> */}
+            >Continue with Google</button>
             <div>Don't have an account? <Link to={'/signup'} style={{ color: '#60c8ff', textDecoration: 'none' }}>Create one</Link></div>
           </div>
+
         </form>
 
       </div>
