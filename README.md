@@ -29,7 +29,7 @@ This TODO app is developed using React.js, Firebase for authentication, and Boot
 
 **Website Link** :
 
-* Live at : [TODO App](https://todo-app-ashen-sigma.vercel.app/)
+* Live at : [https://todo-app-ashen-sigma.vercel.app/](https://todo-app-ashen-sigma.vercel.app/)
 
 **ScreenShots**
 
