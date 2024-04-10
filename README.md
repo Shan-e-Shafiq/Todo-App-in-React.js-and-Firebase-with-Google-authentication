@@ -17,11 +17,11 @@ This TODO app is developed using React.js, Firebase for authentication, and Boot
 
 **Technologies** ⚙️:
 
-> React.js
-> Firebase (Authentication)
-> Firebase (Cloud FireStore)
-> Bootstrap
-> Custom CSS
+* React.js
+* Firebase (Authentication)
+* Firebase (Cloud FireStore)
+* Bootstrap
+* Custom CSS
 
 **Deployment** :
 
