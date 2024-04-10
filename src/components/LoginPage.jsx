@@ -4,6 +4,9 @@ import dark_image from '../assets/bg-desktop-dark.jpg'
 import { LightTheme, DarkTheme } from '../../Themes'
 import { Context } from '../GlobalContext'
 import { Link } from 'react-router-dom'
+import useFirebase from '../../customHooks/useFirebase'
+import { useNavigate } from 'react-router-dom';
+
 
 export default function LoginPage() {
   // FUNCTIONS
@@ -13,24 +16,39 @@ export default function LoginPage() {
   function handleShowPassword() {
     showPasswordRef.current.checked ? setshowPassword(true) : setshowPassword(false)
   }
-  function handleLogin(e) {
+  async function handleLogin(e) {
     e.preventDefault()
-    let dataObject = {}
+    let userdata = {}
     const formData = new FormData(e.target)
     formData.forEach((value, key) => {
-      dataObject[key] = value
+      userdata[key] = value
     })
+    if (!userdata.email.endsWith('.com')) {
+      alert("Invalid email address! ⚠")
+      return
+    } else {
+      setLoader(true)
+      await Login_user(userdata.email, userdata.password)
+      setLoader(false)
+      navigate('/')
+    }
+  }
+  async function handleGoogleAuth() {
+    await Google_Auth()
+    navigate('/')
   }
 
   // VARIABLES
-  const { isDark, setisDark } = useContext(Context)
+  const { isDark, setisDark, setLoader } = useContext(Context)
   const [showPassword, setshowPassword] = useState(false)
   const showPasswordRef = useRef(null)
+  const { Login_user, Google_Auth } = useFirebase()
   const InputFieldStyle = {
     backgroundColor: 'transparent',
     borderColor: isDark ? '#60c8ff' : '#7d2dff',
     color: isDark ? 'white' : LightTheme.textColor
   }
+  const navigate = useNavigate()
 
   // CODE
 
@@ -69,7 +87,6 @@ export default function LoginPage() {
             backgroundColor: isDark ? DarkTheme.TodoContainerColor : LightTheme.TodoContainerColor,
             padding: '20px',
             color: isDark ? DarkTheme.textColor : LightTheme.textColor
-
           }}
         >
           {/* email address */}
@@ -90,7 +107,7 @@ export default function LoginPage() {
           {/* form buttons */}
           <div className="form_buttonContainer flex">
             <button type='submit'>Login</button>
-            <button type='submit'
+            <button type='button' onClick={handleGoogleAuth}
               style={{
                 color: '#60c8ff',
                 background: 'transparent',
@@ -99,9 +116,7 @@ export default function LoginPage() {
             >Continue with Google</button>
             <div>Don't have an account? <Link to={'/signup'} style={{ color: '#60c8ff', textDecoration: 'none' }}>Create one</Link></div>
           </div>
-
         </form>
-
       </div>
     </div>
   )

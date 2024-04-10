@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { LightTheme, DarkTheme } from '../../Themes'
 import { Context } from '../GlobalContext'
+import useFirebase from '../../customHooks/useFirebase';
 
 export default function TodoItem(props) {
 
@@ -8,16 +9,35 @@ export default function TodoItem(props) {
 
   function handleClick() {
     isChecked ? setisChecked(false) : setisChecked(true)
-    Todos.forEach(element => {
+    Todos.forEach(async (element) => {
       if (element.id == props.todo.id) {
-        props.todo.completed ? element.completed = false : element.completed = true
+        if (props.todo.completed) {
+          element.completed = false
+          setLoader(true)
+          await MarkTodo_as_complete(props.todo.id, { completed: false })
+          setLoader(false)
+        } else {
+          element.completed = true
+          setLoader(true)
+          await MarkTodo_as_complete(props.todo.id, { completed: true })
+          setLoader(false)
+        }
       }
     });
   }
 
-  function handleDelete() {
-    let NewArray = Todos.filter(e => {
+  async function handleDelete() {
+    if (Todos.length == 1) {
+      console.log(Todos[0].id)
+      setLoader(true)
+      await DeleteTodo(Todos[0].id)
+      setLoader(false)
+    }
+    let NewArray = Todos.filter(async (e) => {
       if (e.id != props.todo.id) {
+        setLoader(true)
+        await DeleteTodo(props.todo.id)
+        setLoader(false)
         return e
       }
     })
@@ -27,8 +47,9 @@ export default function TodoItem(props) {
 
   // VARIABLES 
 
-  const { isDark, Todos, setTodos, setTodos2 } = useContext(Context)
+  const { isDark, Todos, setTodos, setTodos2, setLoader } = useContext(Context)
   const [isChecked, setisChecked] = useState(false)
+  const { DeleteTodo, MarkTodo_as_complete } = useFirebase()
   let { todo } = props
 
   // CODE

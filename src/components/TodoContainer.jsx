@@ -1,21 +1,31 @@
 import React, { useContext, useRef } from 'react'
 import light_image from '../assets/bg-desktop-light.jpg'
+import light_image_mob from '../assets/bg-mobile-light.jpg'
 import dark_image from '../assets/bg-desktop-dark.jpg'
+import dark_image_mob from '../assets/bg-mobile-dark.jpg'
 import { LightTheme, DarkTheme } from '../../Themes'
-import TodoItem from './TodoItem'
 import { Context } from '../GlobalContext'
+import useFirebase from '../../customHooks/useFirebase'
+import TodoItemsContainer from './TodoItemsContainer'
+import { useNavigate } from 'react-router-dom';
+import Spinner from './Spinner'
 
 export default function TodoContainer() {
+
 	// FUNCTIONS
+
 	function handleThemeChange() {
 		isDark ? setisDark(false) : setisDark(true)
 	}
+
 	function addHoverClass(e) {
 		e.target.classList.add(isDark ? 'hoverLight' : 'hoverDark')
 	}
+
 	function removeHoverClass(e) {
 		e.target.classList.remove(isDark ? 'hoverLight' : 'hoverDark')
 	}
+
 	function handleActive(e) {
 		let x = Array.from(FiltersRef.current.children)
 		x.forEach(element => {
@@ -37,20 +47,30 @@ export default function TodoContainer() {
 				break
 		}
 	}
-	function handleAddTodo() {
+
+	async function handleAddTodo() {
+		if (!isLoggedIn) {
+			alert("You need to Login first!")
+			navigate('/login')
+			return
+		}
 		if (InputRef.current.value == '') {
 			alert('Empty textfield')
 		} else {
-			let newID = Todos[Todos.length - 1].id + 1
+			setLoader(true)
+			let docID = await insert_todo(InputRef.current.value)
+			setLoader(false)
 			let newTodo = {
-				id: newID,
+				id: docID,
 				desc: InputRef.current.value,
 				completed: false
 			}
-			setTodos([...Todos, newTodo])
-			setTodos2([...Todos2, newTodo])
+			setTodos([newTodo, ...Todos])
+			setTodos2([newTodo, ...Todos2])
+			InputRef.current.value = ''
 		}
 	}
+
 	function filterActive() {
 		let NewArray = Todos2.filter(e => {
 			if (!e.completed) {
@@ -59,9 +79,11 @@ export default function TodoContainer() {
 		})
 		setTodos(NewArray)
 	}
+
 	function filterAll() {
 		setTodos(Todos2)
 	}
+
 	function filterCompleted() {
 		let NewArray = Todos2.filter(e => {
 			if (e.completed) {
@@ -70,10 +92,15 @@ export default function TodoContainer() {
 		})
 		setTodos(NewArray)
 	}
+
 	function handleClearCompleted() {
-		let NewArray = Todos2.filter(e => {
+		let NewArray = Todos2.filter(async (e) => {
 			if (!e.completed) {
 				return e
+			} else {
+				setLoader(true)
+				await DeleteTodo(e.id)
+				setLoader(false)
 			}
 		})
 		setTodos(NewArray)
@@ -81,9 +108,13 @@ export default function TodoContainer() {
 	}
 
 	// VARIABLES
-	const { isDark, setisDark, Todos, setTodos, Todos2, setTodos2 } = useContext(Context)
+
+	const { isDark, setisDark, Todos, setTodos, Todos2, setTodos2, Loader, setLoader, isLoggedIn } = useContext(Context)
 	const FiltersRef = useRef(null)
 	const InputRef = useRef(null)
+	const navigate = useNavigate()
+	const { insert_todo, DeleteTodo } = useFirebase()
+	let windowSize = window.innerWidth
 
 	// CODE
 
@@ -95,8 +126,14 @@ export default function TodoContainer() {
 				userSelect: 'none'
 			}}
 		>
-			<img src={isDark ? dark_image : light_image} alt="" />
+			{
+				windowSize <= 1024 ?
+					<img src={isDark ? dark_image_mob : light_image_mob} alt="" />
+					:
+					<img src={isDark ? dark_image : light_image} alt="" />
+			}
 
+			{Loader ? <Spinner /> : ''}
 			<div className='TodoContainer flex'>
 
 				{/* ################ HEADER ################ */}
@@ -132,17 +169,20 @@ export default function TodoContainer() {
 
 					{/* ################ TODO ITEMS CONTAINER ################ */}
 
-					<div className="TodoItemsContainer"
-						style={{
-							backgroundColor: isDark ? DarkTheme.TodoContainerColor : LightTheme.TodoContainerColor
-						}}
-					>
-						{
-							Todos.map((todo) => {
-								return <TodoItem key={todo.id} todo={todo} />
-							})
-						}
-					</div>
+					{
+						Todos.length == 0 ?
+							<div className="TodoItemsContainer flex"
+								style={{
+									backgroundColor: isDark ? DarkTheme.TodoContainerColor : LightTheme.TodoContainerColor,
+									justifyContent: 'center',
+									color: isDark ? DarkTheme.textColor : LightTheme.textColor
+								}}
+							>
+								<div >No Todos available</div>
+							</div>
+							:
+							<TodoItemsContainer Todos={Todos} />
+					}
 
 					{/* ################ FILTERS CONTAINER ################ */}
 
@@ -153,7 +193,46 @@ export default function TodoContainer() {
 						}}
 					>
 						<div>{Todos.length} items left</div>
-						<div ref={FiltersRef} className='Filters flex'>
+						{
+							windowSize > 480 ?
+								<div ref={FiltersRef} className='Filters flex'>
+									<div
+										className='active'
+										onMouseEnter={addHoverClass}
+										onMouseLeave={removeHoverClass}
+										onClick={handleActive}
+									>All</div>
+									<div
+										onMouseEnter={addHoverClass}
+										onMouseLeave={removeHoverClass}
+										onClick={handleActive}
+									>Active</div>
+									<div
+										onMouseEnter={addHoverClass}
+										onMouseLeave={removeHoverClass}
+										onClick={handleActive}
+									>Completed</div>
+								</div> : ''
+						}
+						<div style={{ cursor: 'pointer' }}
+							onMouseEnter={addHoverClass}
+							onMouseLeave={removeHoverClass}
+							onClick={handleClearCompleted}
+						>Clear Completed</div>
+					</div>
+				</div>
+				{
+					windowSize <= 481 ?
+						<div ref={FiltersRef} className='Filters flex'
+							style={{
+								backgroundColor: isDark ? DarkTheme.TodoContainerColor : LightTheme.TodoContainerColor,
+								color: isDark ? DarkTheme.inactiveColor : LightTheme.inactiveColor,
+								width: '100%',
+								justifyContent: 'center',
+								padding: '15px',
+								borderRadius: '10px'
+							}}
+						>
 							<div
 								className='active'
 								onMouseEnter={addHoverClass}
@@ -170,15 +249,8 @@ export default function TodoContainer() {
 								onMouseLeave={removeHoverClass}
 								onClick={handleActive}
 							>Completed</div>
-						</div>
-						<div style={{ cursor: 'pointer' }}
-							onMouseEnter={addHoverClass}
-							onMouseLeave={removeHoverClass}
-							onClick={handleClearCompleted}
-						>Clear Completed</div>
-					</div>
-				</div>
-
+						</div> : ''
+				}
 			</div>
 		</div>
 	)

@@ -1,10 +1,22 @@
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap');
+
 /*  GENERAL CSS */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Josefin Sans", sans-serif;
+}
+
+body {
+  overflow: hidden;
+}
 
 .flex {
   display: flex;
   align-items: center;
 }
-
 
 /* MainContainer */
 
@@ -32,8 +44,34 @@
   gap: 10px;
 }
 
-.LoginSignup button {
-  /* background-color: white; */
+.UserDetails {
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+}
+
+.ProfilePic {
+  width: 40px;
+  height: 40px;
+  background-color: white;
+  border-radius: 50%;
+  color: black;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.ProfilePic i {
+  font-size: 24px;
+}
+
+.ProfilePic img {
+  object-fit: cover;
+  height: 100%;
+  width: 100%;
+}
+
+.LoginSignup button,
+.UserDetails button {
   background: linear-gradient(to bottom right, #60c8ff, #7d2dff);
   color: white;
   font-weight: 700;
@@ -45,7 +83,7 @@
 .TodoContainer {
   width: 480px;
   height: 520px;
-  z-index: 1;
+  z-index: 0;
   border-radius: 10px;
   flex-direction: column;
   gap: 25px;
@@ -133,7 +171,6 @@
   overflow: hidden;
   border-radius: 10px;
 }
-
 
 /* TODO ITEMS CONTAINER */
 
@@ -228,4 +265,59 @@
   gap: 25px;
   overflow: hidden;
   padding: 20px;
+}
+
+/* SPINNER */
+
+.spinner_container {
+  position: fixed;
+  display: grid;
+  place-content: center;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 1;
+}
+
+.spinner_container::before {
+  content: '';
+  background-color: black;
+  opacity: 0.3;
+  z-index: -1;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+
+/* MEDIA QUERIES */
+
+/* Styles for phones */
+@media only screen and (max-width: 480px) {
+  body {
+    overflow: scroll;
+  }
+
+  .MainContainer {
+    align-items: flex-start;
+  }
+
+  .TodoContainer {
+    margin-top: 70px;
+    height: auto;
+  }
+}
+
+/* Styles for tablets */
+@media only screen and (min-width: 481px) and (max-width: 1024px) {
+  .MainContainer {
+    align-items: flex-start;
+  }
+
+  .TodoContainer {
+    margin-top: 150px;
+    transform: scale(1.25);
+  }
 }
